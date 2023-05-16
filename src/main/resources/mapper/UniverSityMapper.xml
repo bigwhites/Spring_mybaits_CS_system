@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Server.example.VoluntaryReporting.mapper.UniverSityMapper">
+
+    <resultMap id="UniMap" type="Server.example.VoluntaryReporting.entity.UniverSity">
+        <result column="schId" property="uId"/>
+        <result column="uName" property="uName" javaType="String"/>
+    <!-- 查询该学校的所有专业       -->
+        <collection property="professionals" ofType="Server.example.VoluntaryReporting.entity.Professional">
+            <result column="proId" property="proId"/>
+            <result column="proName" property="proName" javaType="java.lang.String"/>
+            <result column="forecastScore" property="forecastScore"/>
+            <result column="maxCnt" property="maxCnt"/>
+            <result column="curCnt" property="curCnt"/>
+            <result column="minScore" property="minScore"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findById" parameterType="int" resultMap="UniMap">
+        SELECT u.uName,p.* from professional p,university u WHERE  p.schId = u.uId and u.uId =#{uId}
+    </select>
+    
+    <insert id="addUniverSity" parameterType="Server.example.VoluntaryReporting.entity.UniverSity">
+        insert into university(uName) VALUES(#{uName})
+    </insert>
+
+</mapper>
