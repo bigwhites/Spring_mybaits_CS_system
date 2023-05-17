@@ -18,6 +18,10 @@ public class HighSchoolSerImpl implements HighSchoolService {
         return hSMapper.findById(id);
     }
 
+    @Override
+    public HighSchool findByName(String name) {
+        return hSMapper.findByName(name);
+    }
 
 
 }

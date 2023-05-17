@@ -12,7 +12,9 @@ public interface UniverSityMapper {
     List<UniverSity> findAll();
 
     UniverSity findById(Integer uId);
+    UniverSity findByName(String uName);
 
     int addUniverSity(UniverSity univerSity);
+
 
 }

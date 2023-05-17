@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Server.example.VoluntaryReporting.mapper.StudentMapper">
+
+    <resultMap id="SMap" type="Server.example.VoluntaryReporting.entity.Student">
+        <result column="sId" property="sId"/>
+        <result column="sName" property="sName"/>
+        <result column="identyId" property="identyId"/>
+        <result column="sSex" property="sSex"/>
+        <result column="passWordMd5" property="passWordMd5"/>
+        <result column="chineseScore" property="chineseScore"/>
+        <result column="mathScore" property="mathScore"/>
+        <result column="englishScore" property="englishScore"/>
+        <result column="typeFlag" property="typeFlag"/>
+        <result column="sub1Score" property="sub1Score"/>
+        <result column="schId" property="highSchoolId"/>
+        <result column="totalScore" property="totalScore"/>
+
+        <result column="sub2Name" property="sub2Name"/>
+        <result column="sub2Score" property="sub2Score"/>
+        <result column="sub2Id" property="sub2Id"/>
+
+        <result column="sub3Name" property="sub3Name"/>
+        <result column="sub3Score" property="sub3Score"/>
+        <result column="sub3Id" property="sub3Id"/>
+
+        <!-- 查询高中      -->
+        <association property="school" javaType="Server.example.VoluntaryReporting.entity.HighSchool">
+            <result column="schId" property="schId"/>
+            <result column="schName" property="schName"/>
+        </association>
+    </resultMap>
+
+    <select id="findById" resultMap="SMap" parameterType="int" >
+        SELECT s.*,s2.subName as sub2Name ,s3.subName as sub3Name , sch.*
+        FROM student s
+        inner join subject s2 ON s2.subId = s.sub2Id
+        inner join subject s3 ON s3.subId = s.sub3Id
+        inner join highschool sch ON sch.schId = s.highSchoolId WHERE s.sId = #{sId}
+    </select>
+
+    <select id="findByICrdId" resultMap="SMap" parameterType="String" >
+        SELECT s.*,s2.subName as sub2Name ,s3.subName as sub3Name , sch.*
+        FROM student s
+        inner join subject s2 ON s2.subId = s.sub2Id
+        inner join subject s3 ON s3.subId = s.sub3Id
+        inner join highschool sch ON sch.schId = s.highSchoolId WHERE s.identyId = #{cardId}
+    </select>
+
+    <select id="findAll" resultMap="SMap"  >
+        SELECT s.*,s2.subName as sub2Name ,s3.subName as sub3Name , sch.*
+        FROM student s
+        inner join subject s2 ON s2.subId = s.sub2Id
+        inner join subject s3 ON s3.subId = s.sub3Id
+        inner join highschool sch ON sch.schId = s.highSchoolId
+    </select>
+
+    <insert id="addStudent" parameterType="Server.example.VoluntaryReporting.entity.Student">
+        INSERT INTO student(
+            sId, sName,identyId ,sSex, highSchoolId, chineseScore, mathScore, englishScore,
+            typeFlag, sub1Score, sub2Id, sub2Score,
+            sub3Id, sub3Score, totalScore, passWordMd5)
+        VALUES(
+            #{sId},#{sName},#{identyId},#{sSex},#{highSchoolId},#{chineseScore},#{mathScore},#{englishScore}
+            ,#{typeFlag},#{sub1Score},#{sub2Id},#{sub2Score},#{sub3Id},#{sub3Score},#{totalScore},#{passWordMd5}
+        )
+    </insert>
+
+</mapper>

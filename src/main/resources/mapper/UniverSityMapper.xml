@@ -3,7 +3,7 @@
 <mapper namespace="Server.example.VoluntaryReporting.mapper.UniverSityMapper">
 
     <resultMap id="UniMap" type="Server.example.VoluntaryReporting.entity.UniverSity">
-        <result column="schId" property="uId"/>
+        <result column="uId" property="uId"/>
         <result column="uName" property="uName" javaType="String"/>
     <!-- 查询该学校的所有专业       -->
         <collection property="professionals" ofType="Server.example.VoluntaryReporting.entity.Professional">
@@ -13,12 +13,22 @@
             <result column="maxCnt" property="maxCnt"/>
             <result column="curCnt" property="curCnt"/>
             <result column="minScore" property="minScore"/>
+            <result column="uId" property="uId"/>
         </collection>
     </resultMap>
 
 
     <select id="findById" parameterType="int" resultMap="UniMap">
-        SELECT u.uName,p.* from professional p,university u WHERE  p.schId = u.uId and u.uId =#{uId}
+        <!--  右连接显示没有专业的学校      -->
+        SELECT u.*,p.* from professional p RIGHT JOIN university u ON p.schId = u.uId WHERE  u.uId =#{uId}
+    </select>
+
+    <select id="findByName" parameterType="String" resultMap="UniMap">
+        SELECT u.*,p.* from professional p RIGHT JOIN university u ON p.schId = u.uId WHERE u.uName = #{uName}
+    </select>
+
+    <select id="findAll" resultMap="UniMap">
+        SELECT u.*,p.* from professional p RIGHT JOIN university u ON p.schId = u.uId
     </select>
     
     <insert id="addUniverSity" parameterType="Server.example.VoluntaryReporting.entity.UniverSity">

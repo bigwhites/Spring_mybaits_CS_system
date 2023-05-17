@@ -4,4 +4,6 @@ import Server.example.VoluntaryReporting.entity.Administrator;
 
 public interface AdministratorService {
     Administrator findByUsrName(String userName);
+
+    int addAdmin(Administrator admin);
 }

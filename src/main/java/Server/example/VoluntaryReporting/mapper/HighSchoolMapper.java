@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface HighSchoolMapper {
     HighSchool findById(Integer schId);
 
+    HighSchool findByName(String schName);
 }

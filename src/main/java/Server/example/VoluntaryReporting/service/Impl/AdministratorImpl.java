@@ -14,4 +14,12 @@ public class AdministratorImpl implements AdministratorService {
     public Administrator findByUsrName(String userName) {
         return administratorMapper.findByUserName(userName);
     }
+
+    @Override
+    public int addAdmin(Administrator admin) {
+        if(findByUsrName(admin.getAName())!=null){
+            return  0;
+        }
+        return administratorMapper.addAdmin(admin);
+    }
 }

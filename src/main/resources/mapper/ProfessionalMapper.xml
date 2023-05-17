@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Server.example.VoluntaryReporting.mapper.ProfessionalMapper">
+
+    <resultMap id="Pm" type="Server.example.VoluntaryReporting.entity.Professional">
+        <id column="proId" property="proId"/>
+        <result column="proName" property="proName"/>
+        <result column="forecastScore" property="forecastScore"/>
+        <result column="maxCnt" property="maxCnt"/>
+        <result column="curCnt" property="curCnt"/>
+        <result column="minScore" property="minScore"/>
+        <result column="uId" property="uId"/>
+        <!-- 查询该专业的的学校       -->
+        <association property="univerSity" javaType="Server.example.VoluntaryReporting.entity.UniverSity">
+            <result column="uId" property="uId"/>
+            <result column="uName" property="uName"/>
+        </association>
+    </resultMap>
+
+    <select id="findById" parameterType="int" resultMap="Pm">
+        SELECT p.proId, u.*, p.proName, p.forecastScore, p.maxCnt, p.curCnt,
+        p.minScore FROM professional p inner join university u ON p.schId=u.uId WHERE p.proId = #{proId}
+    </select>
+
+    <select id="findByName" parameterType="String" resultMap="Pm">
+        SELECT p.proId, u.*, p.proName, p.forecastScore, p.maxCnt, p.curCnt,
+        p.minScore FROM professional p inner join university u ON p.schId=u.uId WHERE p.proName = #{proName}
+    </select>
+
+
+    <select id="findAll" resultMap="Pm">
+        SELECT p.proId, u.*, p.proName, p.forecastScore, p.maxCnt, p.curCnt,
+        p.minScore FROM professional p inner join university u ON p.schId=u.uId
+    </select>
+
+    <insert id="addProfessional" parameterType="Server.example.VoluntaryReporting.entity.Professional">
+        INSERT INTO professional(schId,proName,forecastScore,maxCnt)
+        VALUES(#{uId},#{proName},#{forecastScore},#{maxCnt})
+    </insert>
+
+</mapper>

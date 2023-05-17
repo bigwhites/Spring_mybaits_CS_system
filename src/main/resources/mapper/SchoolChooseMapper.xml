@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Server.example.VoluntaryReporting.mapper.SchoolChooseMapper">
+
+    <resultMap id="uMap" type="Server.example.VoluntaryReporting.entity.SchoolChoose">
+
+    </resultMap>
+
+    <select id="searchCntBySId" resultType="int" parameterType="int">
+        SELECT COUNT(s.order) FROM schoolchose s WHERE sId = #{sId}
+    </select>
+
+    <insert id="insertChoose" parameterType="Server.example.VoluntaryReporting.entity.SchoolChoose">
+        INSERT INTO schoolchose(sId,proId1,proId2,proId3,proId4,`order`,acceptAdjust)
+        VALUES (#{sId},#{proId1},#{proId2},#{proId3},#{proId4},#{order},#{acceptAdjust})
+    </insert>
+</mapper>
