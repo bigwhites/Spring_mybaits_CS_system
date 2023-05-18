@@ -15,4 +15,6 @@ public interface StudentService {
 
     int addStudent(Student student);
 
+    int upDateById(Student student);
+
 }

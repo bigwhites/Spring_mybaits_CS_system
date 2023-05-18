@@ -14,4 +14,10 @@
         INSERT INTO schoolchose(sId,proId1,proId2,proId3,proId4,`order`,acceptAdjust)
         VALUES (#{sId},#{proId1},#{proId2},#{proId3},#{proId4},#{order},#{acceptAdjust})
     </insert>
+
+    <select id="findBySId" parameterType="int" resultType="Server.example.VoluntaryReporting.entity.SchoolChoose">
+        SELECT  sc.* , uni.uId as uniId FROM schoolchose sc
+        inner join university uni ON (SELECT p.schId FROM professional p WHERE p.proId = sc.proId1 ) = uni.uId
+        WHERE sId = 210100 ORDER BY sc.`order`
+    </select>
 </mapper>

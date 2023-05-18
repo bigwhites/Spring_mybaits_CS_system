@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UniverSityLogic {
+public class UniverSitLogic {
 
-    private UniverSityLogic(){}
+    private UniverSitLogic(){}
 
     public static boolean save2Xls(String fileName) throws IOException {
         HttpConnect.getInst().addUrlPath("/university/getAll");

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 public class SchoolChooseTest {
 
@@ -21,5 +23,11 @@ public class SchoolChooseTest {
         System.out.println(schoolChooseImpl.insertChoose(new SchoolChoose(
                 210106,1004,1014,null,null,1,1,200004,null,null
         )));
+    }
+
+    @Test
+    void testfind(){
+        List<SchoolChoose> schoolChooses = schoolChooseImpl.findBySId(210106);
+        schoolChooses.forEach(System.out::println);
     }
 }

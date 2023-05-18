@@ -7,11 +7,14 @@ import Server.example.VoluntaryReporting.service.Impl.HighSchoolSerImpl;
 import Server.example.VoluntaryReporting.service.Impl.SchoolChooseImpl;
 import Server.example.VoluntaryReporting.service.Impl.StudentImpl;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/student")
@@ -22,6 +25,8 @@ public class StudentController {
     HighSchoolSerImpl schooImpl ;
     @Autowired
     SchoolChooseImpl schoolChooseImpl;
+
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /*******
      * #Description: 处理查询考生信息的get请求
@@ -104,7 +109,10 @@ public class StudentController {
     @GetMapping("/getSchoolChooseBysId")
     @ResponseBody
     String getSchoolChoose(@RequestParam("sId") Integer sId){
+        if(studentImpl.findById(sId)==null){
             return null;
+        }
+        return JSON.toJSONString(schoolChooseImpl.findBySId(sId));
     }
 
     /*******
@@ -120,7 +128,49 @@ public class StudentController {
         for(SchoolChoose schoolChoose :schoolChooses){
             schoolChooseImpl.insertChoose(schoolChoose);
         }
-        return getChooseCnt(schoolChooses.get(0).getSId());
+        return String.valueOf(schoolChooseImpl.searchCntBySId(schoolChooses.get(0).getSId()));
+    }
+
+    @PostMapping("/upDatePwd")
+    @ResponseBody
+    String setPwd(@RequestParam Map<String,String> parms){
+        Integer sId = Integer.parseInt(parms.get("sId"));
+        String oriPwd = parms.get("oriPwdMd5");
+        String newPwd = parms.get("newPwdMd5");
+        logger.info("oriPwd={} newPwd={}",oriPwd,newPwd);
+        Student student = studentImpl.findById(sId);
+        String curPwd = student.getPassWordMd5();
+        if(!curPwd.equals(oriPwd)) {
+            return "0";
+        }
+        else if(oriPwd.equals(newPwd)){
+            return "-1";
+        }
+        student.setPassWordMd5(newPwd);
+        //更新
+        return String.valueOf(studentImpl.upDateById(student));
+    }
+
+    /*******
+     * #Description:  更新学生的信息
+     * #Param: [java.lang.String] -> [stuJsonStr] 学生对象的JSON串
+     * #return: java.lang.String 更新的结果对象
+     * #Date: 2023/5/18
+     *******/
+    @PostMapping("upDateData")
+    @ResponseBody
+    String upDateBySId(@RequestBody String stuJsonStr){
+        Student student = JSON.parseObject(stuJsonStr,Student.class);
+        if(studentImpl.findById(student.getSId())==null){
+            return null;
+        }
+        else
+        {
+            studentImpl.upDateById(student);
+            Student newStu = studentImpl.findById(student.getSId());
+            logger.info(newStu.toString());
+            return JSON.toJSONString(newStu);
+        }
     }
 
 }

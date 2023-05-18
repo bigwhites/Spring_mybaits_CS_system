@@ -1,4 +1,4 @@
-#spring.datasource.url =jdbc:mysql://localhost:3306/voluntaryreporting?useSSL=false
+ #spring.datasource.url =jdbc:mysql://localhost:3306/voluntaryreporting?useSSL=false
 #spring.datasource.username=root
 #spring.datasource.password=123456
 #
@@ -13,9 +13,25 @@ spring:
     url: jdbc:mysql://localhost:3306/voluntaryreporting?useSSL=false
     username: root
     password: 123456
+  banner:
+    charset: UTF-8
+    location: classpath:banner.txt
+
 
 
 mybatis:
   type-aliases-package: Server.example.VoluntaryReporting.entity
   mapper-locations: classpath:/mapper/*.xml
 
+#logging:
+#  level:
+#    root: off
+ 
+ # BANNER
+#   spring.banner.charset=UTF-8 # Banner file encoding.
+#   spring.banner.location=classpath:banner.txt # Banner text resource location.
+#   spring.banner.image.location=classpath:banner.gif # Banner image file location (jpg or png can also be used).
+#   spring.banner.image.width=76 # Width of the banner image in chars.
+#   spring.banner.image.height= # Height of the banner image in chars (default based on image height).
+#   spring.banner.image.margin=2 # Left hand image margin in chars.
+#   spring.banner.image.invert=false # Whether images should be inverted for dark terminal themes.

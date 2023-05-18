@@ -65,5 +65,10 @@
             ,#{typeFlag},#{sub1Score},#{sub2Id},#{sub2Score},#{sub3Id},#{sub3Score},#{totalScore},#{passWordMd5}
         )
     </insert>
-
+    <update id="upDateById" parameterType="Server.example.VoluntaryReporting.entity.Student">
+        <!-- 分数 和 主键   等不可修改-->
+        UPDATE student t SET t.identyId=#{identyId},t.passWordMd5=#{passWordMd5},
+            t.sName=#{sName},t.sSex=#{sSex}
+            WHERE t.sId = #{sId}
+    </update>
 </mapper>

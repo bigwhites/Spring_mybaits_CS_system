@@ -3,7 +3,7 @@ package Client;
 
 import Client.Logic.ProfessionalLogic;
 import Client.Logic.StudentLogic;
-import Client.Logic.UniverSityLogic;
+import Client.Logic.UniverSitLogic;
 import Server.example.VoluntaryReporting.entity.Student;
 import com.alibaba.fastjson2.JSON;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -12,6 +12,9 @@ import utils.HttpConnect;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class ClientApplicatiion {
@@ -132,11 +135,23 @@ public class ClientApplicatiion {
                 String respnond = HttpConnect.getInst().GetRequest();  //已登录的学生不可能为空值
                 System.out.println(JSON.parseObject(respnond, Student.class).toString());
 
-                System.out.printf("当前填报的专业的数量为%d个\n",StudentLogic.getChosenCnt(userId) );
-
+                System.out.printf("当前填报的专业的数量为%d个\n", StudentLogic.getChosenCnt(userId) );
+                break;
+            }
+            case 2: {
+                StudentLogic.upDate(userId);
+                break;
+            }
+            case 3:{  //修改密码
+               StudentLogic.upDatePwd(userId);
+                break;
             }
             case 4 : {  //填报志愿
                 StudentLogic.addSchoolChoose(Integer.parseInt(userId));
+                break;
+            }
+            case 5:{ //查询所填报的专业
+                StudentLogic.showCurChoose(userId);
                 break;
             }
         }
@@ -151,7 +166,7 @@ public class ClientApplicatiion {
             case 1: { //导出院校信息
                 System.out.print("请输入输出的文件名(*.xls)>>>>>>");
                 final String fileName = ScannerSingleInst.getInst().next();
-                boolean ok = UniverSityLogic.save2Xls(fileName);
+                boolean ok = UniverSitLogic.save2Xls(fileName);
                 System.out.println(ok ? "导出成功！" : "导出失败！");
                 break;
             }
@@ -162,11 +177,11 @@ public class ClientApplicatiion {
                 System.out.print("输入表格文件的绝对路径>>>>>");
                 String filePath = ScannerSingleInst.getInst().next();
                 System.out.printf("成功新增了%d个院校的信息！"
-                        , UniverSityLogic.addFromXls(filePath));
+                        , UniverSitLogic.addFromXls(filePath));
                 break;
             }
             case 5: {  //查询院校
-                UniverSityLogic.searhMenu();
+                UniverSitLogic.searhMenu();
                 break;
             }
             case 7: {   //查询专业
@@ -186,7 +201,7 @@ public class ClientApplicatiion {
             case 12:{
                 System.out.print("输入表格文件的绝对路径>>>>>");
                 String filePath = ScannerSingleInst.getInst().next();
-                System.out.printf("成功导入了%d个学生\n",StudentLogic.addFormxls(filePath));
+                System.out.printf("成功导入了%d个学生\n", StudentLogic.addFormxls(filePath));
                 break;
             }
 

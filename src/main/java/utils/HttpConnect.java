@@ -1,10 +1,10 @@
 package utils;
 
-import Client.ScannerSingleInst;
-import jdk.jfr.Frequency;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 public class HttpConnect {
     private final String BASIC_LOC = "http://localhost:8080";
@@ -76,6 +76,28 @@ public class HttpConnect {
             return res.body().string();
         }
     }
+
+    /*******
+     * #Description: 带有参数的POST请求
+     * #Param: [Map<String,Object>] -> [parms] 请求参数<String,String(内容)>
+     * #return: java.lang.String  返回的响应体
+     * #Date: 2023/5/18
+     *******/
+    public String PostRequset(Map<String,String> parms) throws IOException{
+        checkGetArg();
+        FormBody.Builder fb = new FormBody.Builder();
+        Set<String> keySet = parms.keySet();
+        for(String k : keySet){
+            fb.add(k, parms.get(k));
+        }
+        Request request = new  Request.Builder().post(fb.build()).url(String.valueOf(url)).build();
+        url = new StringBuilder(BASIC_LOC);
+        try (Response res = client.newCall(request).execute()) {
+            assert res.body() != null;
+            return res.body().string();
+        }
+    }
+
     /*******
      * #Description: 根据给出的路径进行post请求
      * #Param: [java.lang.String] -> [jsonStr]  请求的josn串  //空值返回”“
@@ -83,9 +105,7 @@ public class HttpConnect {
      * #Date: 2023/5/16
      *******/
     public String PostRequest(String jsonStr) throws IOException{
-        if(endPath){  //含有查询参数 则非法
-            throw new IOException(String.format("路径参数：%s 为非法的post请求url",url));
-        }
+        checkGetArg();
         final MediaType mediaType = MediaType.parse("application/json:charset=utf-8");
         Request req = new Request.Builder().url(url.toString())
                 .post(FormBody.create(mediaType,jsonStr)).build();
@@ -93,6 +113,12 @@ public class HttpConnect {
         try (Response res = client.newCall(req).execute()) {
             assert res.body() != null;
             return res.body().string();
+        }
+    }
+
+    private void checkGetArg() throws IOException {
+        if(endPath){  //含有查询参数 则非法
+            throw new IOException(String.format("路径参数：%s 为非法的post请求url",url));
         }
     }
 }

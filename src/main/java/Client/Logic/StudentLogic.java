@@ -15,19 +15,14 @@ import utils.HttpConnect;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class StudentLogic {
     private StudentLogic() {
     }
 
     private static final HashMap<String, Integer> subjectName2Id;
-    private static final String REGEX_2_IDCRD =   //匹配身份证的正则
-            "^[1-9]\\\\d{5}(19|20)\\\\d{2}(0\\\\d|10|11|12)" +
-                    "([0-2]\\\\d|30|31)\\\\d{3}[0-9xX]$";
+    private static final String REGEX_2_IDCRD = "^[1-9]\\d{5}(18|19|20)\\d{2}(0[1-8]|1[0-2])(0[1-9]|[12][0-9]|3[01])\\d{3}[0-9xX]$";  //匹配身份证的正则
 
 
     static {
@@ -138,7 +133,6 @@ public class StudentLogic {
      * #return: void
      * #Date: 2023/5/17
      *******/
-
     @SneakyThrows
     public static void addSchoolChoose(int userId) throws IOException, RuntimeException{
         int oriCnt = getChosenCnt(String.valueOf(userId));
@@ -182,5 +176,70 @@ public class StudentLogic {
         HttpConnect.getInst().addUrlPath("/student/addSchoolChoose");
         System.out.printf("共填报了%s个专业\n",
                 HttpConnect.getInst().PostRequest(JSON.toJSONString(schoolChooses)));
+    }
+
+    public static void showCurChoose(String sId) {
+        HttpConnect.getInst().addUrlPath("/student/getSchoolChooseBysId");
+        try {
+            HttpConnect.getInst().addGetParam("sId",sId);
+            String respond =  HttpConnect.getInst().GetRequest();
+            System.out.println("当前填报的专业：");
+            JSON.parseArray(respond,SchoolChoose.class).forEach(System.out::println);
+        } catch (IOException ignored){}
+    }
+
+    public static void upDatePwd(String userId) throws IOException {
+        while (true) {
+            HttpConnect.getInst().addUrlPath("/student/upDatePwd");
+            Map<String, String> m = new TreeMap<>();
+            System.out.print("输入原密码：");
+            String oriPwd = ScannerSingleInst.getInst().next();
+            System.out.print("输入新密码：");
+            String newPwd = ScannerSingleInst.getInst().next();
+            if(oriPwd.equals(newPwd)){
+                System.out.println("两次密码相同，请重新输入！");
+                continue;
+            }
+            m.put("oriPwdMd5", DigestUtils.md5Hex(oriPwd));
+            m.put("newPwdMd5", DigestUtils.md5Hex(newPwd));
+            m.put("sId",userId);
+            String respond = HttpConnect.getInst().PostRequset(m);
+            if(respond.equals("") || respond.equals("0")){
+                System.out.println("原密码错误，请重新输入！");
+            }
+            else if(respond.equals("-1")){
+                System.out.println("旧密码和新密码相同！");
+            }
+            else {
+                System.out.println("修改成功！");
+                break;
+            }
+        }
+    }
+
+    public static void upDate(String userId) throws IOException {
+        HttpConnect.getInst().addUrlPath("/student/findById");
+        HttpConnect.getInst().addGetParam("sId",userId);
+        String oriStuJsonStr = HttpConnect.getInst().GetRequest();
+        Student oriStu = JSON.parseObject(oriStuJsonStr,Student.class);
+        System.out.print("请输入您的姓名>>>>>");
+        oriStu.setSName(ScannerSingleInst.getInst().next());
+        System.out.print("请输入您的性别(0：女/1：男)>>>>>");
+        oriStu.setSSex(
+                ScannerSingleInst.getInst().next().equals("1")?"男":"女");
+        String iddentId = null;
+        int cnt = 0;
+        do{
+            if(cnt>0){
+                System.out.println("输入错误，请重新输入");
+            }
+            System.out.print("请输入您的身份证号>>>>>");
+            iddentId =  ScannerSingleInst.getInst().next();
+            ++cnt;
+        }while (!iddentId.matches(REGEX_2_IDCRD));
+        oriStu.setIdentyId(iddentId);
+        HttpConnect.getInst().addUrlPath("/student/upDateData");
+        String newJson = HttpConnect.getInst().PostRequest(JSON.toJSONString(oriStu));
+        System.out.printf("修改后您的信息为：\n %s\n",JSON.parseObject(newJson,Student.class).toString());
     }
 }
