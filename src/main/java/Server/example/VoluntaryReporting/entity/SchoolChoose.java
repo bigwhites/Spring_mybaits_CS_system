@@ -41,7 +41,7 @@ public class SchoolChoose implements Serializable {  //志愿记录类
             res.append("\t专业号：");
             res.append(professional.getProId());
         }
-        return  res + "\n</schoolChoose>\n";
+        return  res + "\n</SchoolChoose>\n";
     }
 
 }

@@ -20,7 +20,7 @@ public class UniverSity implements Serializable {
     @Override
     public String toString() {
         StringBuilder res  = new StringBuilder();
-        res.append(String.format("院校代码：%d,院校名称:%s,专业数量:%d",uId,uName,professionals.size()));
+        res.append(String.format("<UniverSity>\n院校代码：%d,院校名称:%s,专业数量:%d",uId,uName,professionals.size()));
         if(professionals.size() != 0) {
             res.append("\n下设专业:");
             for (Professional p : professionals) {
@@ -28,6 +28,7 @@ public class UniverSity implements Serializable {
                 res.append(p.toString());
             }
         }
+        res.append("\n</UniverSity>\n");
         return res.toString();
     }
 }

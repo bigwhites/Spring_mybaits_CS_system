@@ -13,4 +13,6 @@ public interface HighSchoolService {
     HighSchool findById(Integer id);
 
     HighSchool findByName(String name);
+
+    HighSchool addHighSchool(String schName);
 }

@@ -17,4 +17,6 @@ public interface ProfessionalMapper {
 
     List<Professional> findByName(String proName );
     int addProfessional(Professional professional);
+
+    int update(Professional professional);
 }

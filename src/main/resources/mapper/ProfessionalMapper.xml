@@ -38,4 +38,11 @@
         VALUES(#{uId},#{proName},#{forecastScore},#{maxCnt})
     </insert>
 
+    <update id="update" parameterType="Server.example.VoluntaryReporting.entity.Professional">
+        UPDATE professional p
+        SET    p.proName = #{proName} , p.forecastScore = #{forecastScore} , p.maxCnt = #{maxCnt},
+               p.curCnt  = #{curCnt}  , p.minScore = #{minScore} , p.schId = #{uId}
+        WHERE  p.proId = #{proId}
+    </update>
+
 </mapper>

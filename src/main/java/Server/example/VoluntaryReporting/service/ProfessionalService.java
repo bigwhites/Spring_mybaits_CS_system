@@ -12,4 +12,6 @@ public interface ProfessionalService {
     List<Professional> findAll();
 
     List<Professional> findByName(String proName);
+
+    int update(Professional professional);
 }

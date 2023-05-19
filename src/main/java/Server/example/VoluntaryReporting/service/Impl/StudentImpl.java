@@ -1,17 +1,22 @@
 package Server.example.VoluntaryReporting.service.Impl;
 
 import Server.example.VoluntaryReporting.entity.Student;
+import Server.example.VoluntaryReporting.mapper.HighSchoolMapper;
 import Server.example.VoluntaryReporting.mapper.StudentMapper;
 import Server.example.VoluntaryReporting.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class StudentImpl implements StudentService {
     @Autowired
     StudentMapper studentMapper;
+    @Autowired
+    HighSchoolMapper highSchoolMapper;
 
     @Override
     public List<Student> findAll() {
@@ -46,5 +51,23 @@ public class StudentImpl implements StudentService {
     @Override
     public int upDateById(Student student) {
         return studentMapper.upDateById(student);
+    }
+
+    @Override
+    public List<Student> findByRange(Integer pageSize, Integer begin) {
+            List<Integer> sIds = studentMapper.getSidByIndex(pageSize,begin);
+            List<Student> students = new LinkedList<>();
+            int i = 1;
+            for(Integer sId : sIds){
+                Student student  = studentMapper.findById(sId);
+                student.setScoreIndex(begin + i++);
+                students.add(student);
+            }
+            return students;
+    }
+
+    @Override
+    public int getNum() {
+       return studentMapper.getNum();
     }
 }

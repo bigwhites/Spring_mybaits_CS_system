@@ -157,7 +157,7 @@ public class StudentController {
      * #return: java.lang.String 更新的结果对象
      * #Date: 2023/5/18
      *******/
-    @PostMapping("upDateData")
+    @PostMapping("/upDateData")
     @ResponseBody
     String upDateBySId(@RequestBody String stuJsonStr){
         Student student = JSON.parseObject(stuJsonStr,Student.class);
@@ -168,9 +168,15 @@ public class StudentController {
         {
             studentImpl.upDateById(student);
             Student newStu = studentImpl.findById(student.getSId());
-            logger.info(newStu.toString());
+            logger.info("{}",newStu.toString());
             return JSON.toJSONString(newStu);
         }
     }
 
+    @GetMapping("/addHighSchool")
+    @ResponseBody
+    HighSchool addHighSchool(@RequestParam("schName")String schName){
+        logger.info("添加高中");
+        return schooImpl.addHighSchool(schName);
+    }
 }

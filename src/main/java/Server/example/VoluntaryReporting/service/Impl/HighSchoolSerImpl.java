@@ -23,5 +23,15 @@ public class HighSchoolSerImpl implements HighSchoolService {
         return hSMapper.findByName(name);
     }
 
+    @Override
+    public HighSchool addHighSchool(String schName){
+        if(hSMapper.addByName(schName)!=0){
+            return hSMapper.findByName(schName);
+        }
+        else {
+            return null;
+        }
+    }
+
 
 }

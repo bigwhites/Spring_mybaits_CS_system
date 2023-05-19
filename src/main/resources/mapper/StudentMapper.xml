@@ -71,4 +71,13 @@
             t.sName=#{sName},t.sSex=#{sSex}
             WHERE t.sId = #{sId}
     </update>
+
+    <select id="getSidByIndex" resultType="java.lang.Integer" >
+        SELECT sId FROM student s ORDER BY  s.totalScore DESC, s.mathScore DESC ,s.englishScore DESC,s.sub1Score DESC,s.sub2Score DESC,s.sub3Id DESC
+        LIMIT #{pageSize} OFFSET #{begin};
+    </select>
+
+    <select id="getNum" resultType="int" >
+        SELECT COUNT(*) FROM student
+    </select>
 </mapper>

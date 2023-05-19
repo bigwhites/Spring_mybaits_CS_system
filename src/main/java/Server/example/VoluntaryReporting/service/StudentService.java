@@ -17,4 +17,8 @@ public interface StudentService {
 
     int upDateById(Student student);
 
+    List<Student> findByRange(Integer pageSize , Integer begin);
+
+    int getNum();
+
 }

@@ -1,6 +1,7 @@
 package Client.Logic;
 
 import Client.ScannerSingleInst;
+import Server.example.VoluntaryReporting.entity.AdmitResult;
 import Server.example.VoluntaryReporting.entity.HighSchool;
 import Server.example.VoluntaryReporting.entity.SchoolChoose;
 import Server.example.VoluntaryReporting.entity.Student;
@@ -70,10 +71,16 @@ public class StudentLogic {
                 HttpConnect.getInst().addUrlPath("/student/findSchoolByName");
                 HttpConnect.getInst().addGetParam("schName", highSchoolName);
                 String respond = HttpConnect.getInst().GetRequest();
-                int highSchoolId = JSON.parseObject(respond, HighSchool.class).getSchId();
+                int highSchoolId ;
+                if (respond.equals("")) {  //没有该学校 先添加学校
+                    HttpConnect.getInst().addUrlPath("/student/addHighSchool");
+                    HttpConnect.getInst().addGetParam("schName",highSchoolName);
+                    String schoolJson = HttpConnect.getInst().GetRequest();
+                    highSchoolId = JSON.parseObject(schoolJson,HighSchool.class).getSchId();
 
-                if (respond.equals("")) {  //没有该学校
-                    continue;
+                }
+                else {
+                    highSchoolId = JSON.parseObject(respond, HighSchool.class).getSchId();
                 }
                 int totalScore = 0;
                 boolean uselessRow = false;
@@ -101,7 +108,7 @@ public class StudentLogic {
                         rows[6].getContents().equals("物理") ? 1 : 0, branchScore[0],
                         null, subjectName2Id.get(rows[8].getContents()), branchScore[1],
                         null, subjectName2Id.get(rows[10].getContents()), branchScore[2],
-                        totalScore, highSchoolId, null
+                        totalScore, highSchoolId, null,null
                 ));
             }
             HttpConnect.getInst().addUrlPath("/student/add");
@@ -241,5 +248,39 @@ public class StudentLogic {
         HttpConnect.getInst().addUrlPath("/student/upDateData");
         String newJson = HttpConnect.getInst().PostRequest(JSON.toJSONString(oriStu));
         System.out.printf("修改后您的信息为：\n %s\n",JSON.parseObject(newJson,Student.class).toString());
+    }
+
+    public static void searchSelf(String userId) throws IOException {
+        HttpConnect.getInst().addUrlPath("/student/findById");
+        HttpConnect.getInst().addGetParam("sId",userId);
+        String respnond = HttpConnect.getInst().GetRequest();  //已登录的学生不可能为空值
+        System.out.println(JSON.parseObject(respnond, Student.class).toString());
+
+        System.out.printf("当前填报的专业的数量为%d个\n", StudentLogic.getChosenCnt(userId) );
+    }
+
+    /*******
+     * #Description: 判断学生是否存在
+     * #Param: [java.lang.String] -> [uId] 学生id
+     * #return: boolean 该学生是否存在
+     * #Date: 2023/5/18
+     *******/
+    public static boolean stuExist(String uId) throws IOException {
+        HttpConnect.getInst().addUrlPath("/login/student");
+        HttpConnect.getInst().addGetParam("uId",uId);
+        String respond = HttpConnect.getInst().GetRequest();
+        return respond!=null && !respond.equals("");
+    }
+
+    public static void showAdmitRes(String userId) throws IOException {
+        HttpConnect.getInst().addUrlPath("/admit/getResultBySId");
+        HttpConnect.getInst().addGetParam("sId",userId);
+        String respond = HttpConnect.getInst().GetRequest();
+        if(respond.equals("")){
+            System.out.println("还未开始录取");
+        }
+        else {
+            System.out.println(JSON.parseObject(respond, AdmitResult.class));
+        }
     }
 }

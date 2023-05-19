@@ -15,4 +15,6 @@ public interface SchoolChooseMapper {
     List<SchoolChoose> findBySId(Integer sId);
 
     int insertChoose(SchoolChoose schoolChoose);
+
+    int deleteAll();
 }

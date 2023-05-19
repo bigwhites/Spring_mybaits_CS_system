@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Server.example.VoluntaryReporting.mapper.AdmitResultMapper">
+
+    <resultMap id="AdmitMap" type="Server.example.VoluntaryReporting.entity.AdmitResult">
+        <id column="sId"  property="sId"/>
+        <result column="proId" property="admitProId"/>
+        <result column="scoreIndex" property="scoreIndex"/>
+    </resultMap>
+
+
+    <insert id="insertResult" parameterType="Server.example.VoluntaryReporting.entity.AdmitResult">
+        INSERT INTO admitresult(sId,proId,scoreIndex)
+        VALUES(#{sId},#{admitProId},#{scoreIndex})
+    </insert>
+
+    <select id="resultsCount" resultType="int">
+        SELECT COUNT(*) FROM admitresult;
+    </select>
+
+    <delete id="deleteAllResults">
+        DELETE FROM admitresult
+    </delete>
+
+    <select id="findAll" resultMap="AdmitMap">
+        SELECT * FROM admitresult
+    </select>
+
+    <select id="findBySId" resultMap="AdmitMap" parameterType="int">
+        SELECT * FROM admitresult WHERE sId = #{sId}
+    </select>
+</mapper>

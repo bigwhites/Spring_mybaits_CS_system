@@ -1,26 +1,22 @@
 package Client;
 
 
+import Client.Logic.AdminLogic;
 import Client.Logic.ProfessionalLogic;
 import Client.Logic.StudentLogic;
 import Client.Logic.UniverSitLogic;
-import Server.example.VoluntaryReporting.entity.Student;
-import com.alibaba.fastjson2.JSON;
 import org.apache.commons.codec.digest.DigestUtils;
 import utils.HttpConnect;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 public class ClientApplicatiion {
 
-    static String userId = String.valueOf(210106);   //考生号 或 管理员用户名
-    static int userType = 2;
+    static String userId = String.valueOf(210115);   //考生号 或 管理员用户名   "testUser"
+    static int userType = 1;
     private static boolean logIn() throws IOException {
         System.out.print("请选择用户身份(1.管理员 2.学生)>>>>>>>>");
         int sel1 = ScannerSingleInst.getInst().nextInt();
@@ -130,12 +126,7 @@ public class ClientApplicatiion {
                 System.exit(0);
             }
             case 1:{  //查询个人信息
-                HttpConnect.getInst().addUrlPath("/student/findById");
-                HttpConnect.getInst().addGetParam("sId",userId);
-                String respnond = HttpConnect.getInst().GetRequest();  //已登录的学生不可能为空值
-                System.out.println(JSON.parseObject(respnond, Student.class).toString());
-
-                System.out.printf("当前填报的专业的数量为%d个\n", StudentLogic.getChosenCnt(userId) );
+                StudentLogic.searchSelf(userId);
                 break;
             }
             case 2: {
@@ -154,6 +145,12 @@ public class ClientApplicatiion {
                 StudentLogic.showCurChoose(userId);
                 break;
             }
+            case 6: {  //查询录取结果
+                StudentLogic.showAdmitRes(userId);
+            }
+            case 16:{
+
+            }
         }
     }
 
@@ -171,6 +168,9 @@ public class ClientApplicatiion {
                 break;
             }
             case 2: {  //注销当前用户
+                System.out.println(
+                        AdminLogic.deleteById(userId)?"成功":"失败");
+                System.exit(0);
                 break;
             }
             case 3: { //批量新增院校
@@ -194,17 +194,63 @@ public class ClientApplicatiion {
                 ProfessionalLogic.addProFromXls(filePath);
                 break;
             }
-            case 11:{
-
+            case 11: {  //修改学生密码
+                System.out.println("请输入学生的学号>>>>>>");
+                final String sId = ScannerSingleInst.getInst().next();
+                StudentLogic.upDatePwd(sId);
+                break;
             }
 
-            case 12:{
+            case 12:{ //批量添加学生（表格读入）
                 System.out.print("输入表格文件的绝对路径>>>>>");
                 String filePath = ScannerSingleInst.getInst().next();
                 System.out.printf("成功导入了%d个学生\n", StudentLogic.addFormxls(filePath));
                 break;
             }
 
+            case 14:{ //修改学生信息
+                System.out.println("请输入学生的学号>>>>>>");
+                final String sId = ScannerSingleInst.getInst().next();
+                if(StudentLogic.stuExist(sId)){
+                    StudentLogic.upDate(sId);
+                }
+                else {
+                    System.out.println("无该学生！");
+                }
+                break;
+            }
+            case 15:{ //查询学生信息
+                System.out.print("请输入考生号>>>>>>");
+                String uId = ScannerSingleInst.getInst().next();
+                if(StudentLogic.stuExist(uId)) {
+                    StudentLogic.searchSelf(uId);
+                }
+                else{
+                    System.out.println("无该考生");
+                }
+                break;
+            }
+            case 16:{
+
+                break;
+            }
+            case 17:{ //开始录取
+                AdminLogic.statAdmit();
+                break;
+            }
+
+            case 18: {
+                AdminLogic.getAllAdmitRes();
+                break;
+            }
+            case 19:{
+
+                break;
+            }
+            case 20:{
+                AdminLogic.queryAdmitStatus();
+                break;
+            }
             default: {
                 System.out.println("输入有误！");
             }

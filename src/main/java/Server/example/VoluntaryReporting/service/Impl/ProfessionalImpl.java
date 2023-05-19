@@ -48,4 +48,9 @@ public class ProfessionalImpl implements ProfessionalService {
     public List<Professional> findByName(String proName) {
         return professionalMapper.findByName(proName);
     }
+
+    @Override
+    public int update(Professional professional) {
+        return professionalMapper.update(professional);
+    }
 }

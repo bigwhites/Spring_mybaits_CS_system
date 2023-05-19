@@ -5,6 +5,8 @@ import Server.example.VoluntaryReporting.entity.Student;
 import Server.example.VoluntaryReporting.service.Impl.AdministratorImpl;
 import Server.example.VoluntaryReporting.service.Impl.StudentImpl;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +23,7 @@ public class LogInController {
     AdministratorImpl administratorImpl;
     @Autowired
     StudentImpl studentImpl;
-
+    final  Logger logger = LoggerFactory.getLogger(LogInController.class);
     /*******
      * #Description:  处理管理员的登录请求
      * #Param: [java.lang.String] -> [userName] 用户名
@@ -42,7 +44,6 @@ public class LogInController {
      * #return: java.lang.String  学生对象的MD5加密后的密文 不存在的学生返回null
      * #Date: 2023/5/16
      *******/
-
     @GetMapping("/student")
     @ResponseBody
     public String checkPassword(@RequestParam(value = "uId") Integer uId){
@@ -69,6 +70,19 @@ public class LogInController {
         }
         administratorImpl.addAdmin(new Administrator(userName, md5Pwd));
         return "ok";
+    }
+
+    /*******
+     * #Description:  管理员账号注销
+     * #Param: [java.lang.String] -> [userName] 管理员的用户名
+     * #return: java.lang.String 0/1的串代表成功或失败
+     * #Date: 2023/5/18
+     *******/
+    @GetMapping("/deleteAdmin")
+    @ResponseBody
+    public String deleteAdmin(@RequestParam("userName") String userName){
+        logger.info("{} is delete ",userName);
+        return String.valueOf(administratorImpl.deleteByUserName(userName));
     }
 
 }

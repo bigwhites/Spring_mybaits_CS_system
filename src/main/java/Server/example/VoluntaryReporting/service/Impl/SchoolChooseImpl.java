@@ -63,7 +63,7 @@ public class SchoolChooseImpl implements SchoolChooseService {
                     professionals.addLast(professional);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
             }
-            schoolChoose.setProfessionals(professionals.toArray(new Professional[professionals.size()]));
+            schoolChoose.setProfessionals(professionals.toArray(new Professional[4]));
         }
         return schoolChooses;
     }
@@ -104,5 +104,10 @@ public class SchoolChooseImpl implements SchoolChooseService {
             }
         }
         return 0;
+    }
+
+    @Override
+    public int deleteAll() {
+        return schoolChooseMapper.deleteAll();
     }
 }

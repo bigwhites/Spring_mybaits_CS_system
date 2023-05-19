@@ -79,6 +79,7 @@ public class ProfessionalLogic {
             for(int row = 1 ; row<sheet.getRows();++row ){
                 Cell[] cells = sheet.getRow(row);
                 for(int i = 0 ;i<cells.length;++i){
+                    if(cells[0].getContents().equals("")) break;
                     int forecastScore = Integer.parseInt(cells[3].getContents());
                     int maxCnt = Integer.parseInt(cells[2].getContents());
                     int uId = Integer.parseInt(cells[1].getContents());

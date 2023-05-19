@@ -22,4 +22,9 @@ public class AdministratorImpl implements AdministratorService {
         }
         return administratorMapper.addAdmin(admin);
     }
+
+    @Override
+    public int deleteByUserName(String userName) {
+        return administratorMapper.deleteByUName(userName);
+    }
 }

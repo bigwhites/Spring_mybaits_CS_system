@@ -10,4 +10,6 @@ public interface HighSchoolMapper {
     HighSchool findById(Integer schId);
 
     HighSchool findByName(String schName);
+
+    int addByName(String schName);
 }

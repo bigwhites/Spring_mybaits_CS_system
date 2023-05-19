@@ -34,12 +34,15 @@ public class Student  implements Serializable {
 
     //外部数据
     private int highSchoolId;
+
+    private Integer scoreIndex; //总分排名 在查询时才构建该项目
     private HighSchool school ;
 
     @Override
     public String toString() {
-        return String.format("[ 姓名：%s 考生号:%d 身份证号：%s 性别:%s 总分:%d 高中:%s \n"
-                , sName, sId, identyId, sSex, totalScore, school.getSchName()) + String.format("%s成绩：%d ，%s成绩：%d，%s成绩：%d  ]",
+        return String.format("<Student> \n姓名：%s 考生号:%d 身份证号：%s 性别:%s 总分:%d %s高中:%s \n"
+                , sName, sId, identyId, sSex, totalScore,scoreIndex==null?"":String.format("总分排名：%d ",scoreIndex)
+                ,school.getSchName()) + String.format("%s成绩：%d ，%s成绩：%d，%s成绩：%d \n</Student>\n",
                 typeFlag == 1 ? "物理" : "历史", sub1Score, sub2Name, sub2Score, sub3Name, sub3Score);
     }
 }

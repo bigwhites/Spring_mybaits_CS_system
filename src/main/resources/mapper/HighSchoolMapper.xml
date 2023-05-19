@@ -9,4 +9,9 @@
         SELECT * FROM highschool  WHERE schName = #{schName}
     </select>
 
+    <insert id="addByName" parameterType="String" >
+        INSERT INTO highschool(schName)
+        VALUES(#{schName})
+    </insert>
+
 </mapper>

@@ -13,6 +13,7 @@ class HighSchoolTest {
 
 	@Autowired
 	HighSchoolSerImpl m;
+	//HighSchoolSerImpl m = new HighSchoolSerImpl();
 
 	@Test
 	void testFBId() {
