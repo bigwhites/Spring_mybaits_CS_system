@@ -16,7 +16,7 @@ import java.io.IOException;
 public class ClientApplicatiion {
 
     static String userId = String.valueOf(210115);   //考生号 或 管理员用户名   "testUser"
-    static int userType = 1;
+    static int userType =2;
     private static boolean logIn() throws IOException {
         System.out.print("请选择用户身份(1.管理员 2.学生)>>>>>>>>");
         int sel1 = ScannerSingleInst.getInst().nextInt();
@@ -87,16 +87,16 @@ public class ClientApplicatiion {
     }
 
     public static void run(){
-//        try {
-//            boolean isLog = logIn();
-//            if(!isLog)
-//            {
-//                System.out.println("密码输入错误次数超限，系统退出！");
-//                System.exit(0);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            boolean isLog = logIn();
+            if(!isLog)
+            {
+                System.out.println("密码输入错误次数超限，系统退出！");
+                System.exit(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while (true){
                 try {
                     printMenu(userType);
@@ -121,137 +121,136 @@ public class ClientApplicatiion {
     }
 
     private static void handleStudent(String selStr) throws IOException {
-        switch (Integer.parseInt(selStr)){
-            case 0: {
+        switch (Integer.parseInt(selStr)) {
+            case 0 -> {
                 System.exit(0);
             }
-            case 1:{  //查询个人信息
+            case 1 -> {  //查询个人信息
                 StudentLogic.searchSelf(userId);
-                break;
             }
-            case 2: {
+            case 2 -> {
                 StudentLogic.upDate(userId);
-                break;
             }
-            case 3:{  //修改密码
-               StudentLogic.upDatePwd(userId);
-                break;
+            case 3 -> {  //修改密码
+                StudentLogic.upDatePwd(userId);
             }
-            case 4 : {  //填报志愿
+            case 4 -> {  //填报志愿
                 StudentLogic.addSchoolChoose(Integer.parseInt(userId));
-                break;
             }
-            case 5:{ //查询所填报的专业
+            case 5 -> { //查询所填报的专业
                 StudentLogic.showCurChoose(userId);
-                break;
             }
-            case 6: {  //查询录取结果
+            case 6 -> {  //查询录取结果
                 StudentLogic.showAdmitRes(userId);
             }
-            case 16:{
-
+            case 7 -> { //展示推荐院校
+                StudentLogic.showRecommend(userId);
+            }
+            case 8 -> { //按照专业名称寻找专业
+                ProfessionalLogic.searchByName();
+            }
+            default -> {
+                System.out.println("输入错误");
             }
         }
     }
 
     private static void handleMannager(String selStr) throws IOException {
         switch (Integer.parseInt(selStr)) {
-            case 0: {  //退出
+            case 0 -> {  //退出
                 System.exit(0);
-                break;
             }
-            case 1: { //导出院校信息
+            case 1 -> { //导出院校信息
                 System.out.print("请输入输出的文件名(*.xls)>>>>>>");
                 final String fileName = ScannerSingleInst.getInst().next();
                 boolean ok = UniverSitLogic.save2Xls(fileName);
                 System.out.println(ok ? "导出成功！" : "导出失败！");
-                break;
             }
-            case 2: {  //注销当前用户
+            case 2 -> {  //注销当前用户
                 System.out.println(
-                        AdminLogic.deleteById(userId)?"成功":"失败");
+                        AdminLogic.deleteById(userId) ? "成功" : "失败");
                 System.exit(0);
-                break;
             }
-            case 3: { //批量新增院校
+            case 3 -> { //批量新增院校
                 System.out.print("输入表格文件的绝对路径>>>>>");
                 String filePath = ScannerSingleInst.getInst().next();
                 System.out.printf("成功新增了%d个院校的信息！"
                         , UniverSitLogic.addFromXls(filePath));
-                break;
             }
-            case 5: {  //查询院校
+            case 4->{ //修改院校信息
+            UniverSitLogic.update();
+            }
+            case 5 -> {  //查询院校
                 UniverSitLogic.searhMenu();
-                break;
             }
-            case 7: {   //查询专业
+            case 6 ->{  //按照名称查找专业
+                ProfessionalLogic.searchByName();
+            }
+            case 7 -> {   //查询专业
                 ProfessionalLogic.searchMenu();
-                break;
             }
-            case 8: {  //批量新增院校专业
+            case 8 -> {  //批量新增院校专业
                 System.out.print("输入表格文件的绝对路径>>>>>");
                 String filePath = ScannerSingleInst.getInst().next();
                 ProfessionalLogic.addProFromXls(filePath);
-                break;
             }
-            case 11: {  //修改学生密码
+            case 9 ->{  //删除专业信息
+                ProfessionalLogic.deletePro();
+            }
+            case 10->{ //修改院校专业
+                ProfessionalLogic.updatePro();
+            }
+            case 11 -> {  //修改学生密码
                 System.out.println("请输入学生的学号>>>>>>");
                 final String sId = ScannerSingleInst.getInst().next();
                 StudentLogic.upDatePwd(sId);
-                break;
             }
-
-            case 12:{ //批量添加学生（表格读入）
+            case 12 -> { //批量添加学生（表格读入）
                 System.out.print("输入表格文件的绝对路径>>>>>");
                 String filePath = ScannerSingleInst.getInst().next();
                 System.out.printf("成功导入了%d个学生\n", StudentLogic.addFormxls(filePath));
-                break;
             }
-
-            case 14:{ //修改学生信息
+            case 13 ->{  //导出学生信息到表格中
+                System.out.print("请输入输出路径>>>>>>");
+                String filePath = ScannerSingleInst.getInst().next();
+                System.out.printf("成功导出了%d个学生的信息",AdminLogic.saveStu2Xls(filePath));
+            }
+            case 14 -> { //修改学生信息
                 System.out.println("请输入学生的学号>>>>>>");
                 final String sId = ScannerSingleInst.getInst().next();
-                if(StudentLogic.stuExist(sId)){
+                if (StudentLogic.stuExist(sId)) {
                     StudentLogic.upDate(sId);
-                }
-                else {
+                } else {
                     System.out.println("无该学生！");
                 }
-                break;
             }
-            case 15:{ //查询学生信息
+            case 15 -> { //查询学生信息
                 System.out.print("请输入考生号>>>>>>");
                 String uId = ScannerSingleInst.getInst().next();
-                if(StudentLogic.stuExist(uId)) {
+                if (StudentLogic.stuExist(uId)) {
                     StudentLogic.searchSelf(uId);
-                }
-                else{
+                } else {
                     System.out.println("无该考生");
                 }
-                break;
             }
-            case 16:{
-
-                break;
+            case 16 -> { //查询某学生的录取结果
+                System.out.print("输入考生号>>>>>>");
+                String sId = ScannerSingleInst.getInst().next();
+                StudentLogic.showAdmitRes(sId);
             }
-            case 17:{ //开始录取
+            case 17 -> { //开始录取
                 AdminLogic.statAdmit();
-                break;
             }
-
-            case 18: {
+            case 18 -> {
                 AdminLogic.getAllAdmitRes();
-                break;
             }
-            case 19:{
-
-                break;
+            case 19 -> {
+                AdminLogic.clearResults();
             }
-            case 20:{
+            case 20 -> {
                 AdminLogic.queryAdmitStatus();
-                break;
             }
-            default: {
+            default -> {
                 System.out.println("输入有误！");
             }
         }

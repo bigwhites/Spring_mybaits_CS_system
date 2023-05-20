@@ -34,4 +34,14 @@ public class UniverSityImpl implements UniverSityService {
         return (univerSityMapper.findByName(univerSity.getUName()) == null) &&
                 (univerSityMapper.addUniverSity(univerSity) == 1) ? 1 : 0;
     }
+
+    @Override
+    public int update(UniverSity univerSity) {
+        if(univerSityMapper.findByName(univerSity.getUName()) != null){
+            return -1; //新名字不能和已有名字重复
+        }
+        else {
+            return univerSityMapper.update(univerSity);
+        }
+    }
 }

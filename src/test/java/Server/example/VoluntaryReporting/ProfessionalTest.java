@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 public class ProfessionalTest {
 
@@ -27,5 +29,17 @@ public class ProfessionalTest {
     @Test
     void ff(){
         System.out.println(proImpl.findById(1001));
+        List<Professional> professionals = proImpl.findByForeScore(550);
+        professionals.forEach(professional -> {
+            System.out.println(professional.toString());
+        });
+    }
+
+    @Test
+    void lile(){
+        List<Professional> nameLike = proImpl.findNameLike("计");
+        for (Professional professional : nameLike) {
+            System.out.println(professional.toString());
+        }
     }
 }

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ProfessionalLogic {
     private ProfessionalLogic(){}
@@ -79,7 +80,7 @@ public class ProfessionalLogic {
             for(int row = 1 ; row<sheet.getRows();++row ){
                 Cell[] cells = sheet.getRow(row);
                 for(int i = 0 ;i<cells.length;++i){
-                    if(cells[0].getContents().equals("")) break;
+                    if(cells[0].getContents()==null ||cells[0].getContents().equals("")) break;
                     int forecastScore = Integer.parseInt(cells[3].getContents());
                     int maxCnt = Integer.parseInt(cells[2].getContents());
                     int uId = Integer.parseInt(cells[1].getContents());
@@ -104,4 +105,59 @@ public class ProfessionalLogic {
     }
 
 
+    public static void searchByName() throws IOException {
+        System.out.print("请输入专业的关键字>>>>>>");
+        String keyWord = ScannerSingleInst.getInst().next();
+        HttpConnect.getInst().addUrlPath("/professional/getByName");
+        HttpConnect.getInst().addGetParam("keyWord",keyWord);
+        String respond = HttpConnect.getInst().GetRequest();
+        List<Professional> professionals = JSON.parseArray(respond, Professional.class);
+        if(professionals == null){
+            System.out.println("未找到院校");
+            return;
+        }
+        System.out.printf("共找到%d条结果：\n",professionals.size());
+        professionals.forEach(professional -> {
+            System.out.println(professional.toString());
+        });
+    }
+
+    public static void deletePro() throws IOException {
+        System.out.print("输入专业id号>>>>>>");
+        String proId = ScannerSingleInst.getInst().next();
+        HttpConnect.getInst().addUrlPath("/professional/deleteByProId");
+        HttpConnect.getInst().addGetParam("proId",proId);
+        String respond = HttpConnect.getInst().GetRequest();
+        if(respond!=null && respond.equals("1")){
+            System.out.println("删除成功！");
+        }
+        else {
+            System.out.println("该专业已有人填报，无法删除");
+        }
+    }
+
+    public static void updatePro() throws IOException {
+        System.out.print("请输入专业号>>>>>>");
+        final String proId = ScannerSingleInst.getInst().next();
+        System.out.print("请输入新的专业名称>>>>>>");
+        String proName = ScannerSingleInst.getInst().next();
+        System.out.print("请输入新的预测分数>>>>>>");
+        final String foreCastScore = ScannerSingleInst.getInst().next();
+        System.out.print("请输入新的最大招生人数>>>>>>");
+        final String maxCnt = ScannerSingleInst.getInst().next();
+        HttpConnect.getInst().addUrlPath("/professional/updateById");
+       String jsonStr = JSON.toJSONString(new Professional(Integer.parseInt(proId),proName,
+                Integer.parseInt(foreCastScore), Integer.parseInt(maxCnt),
+                0,null,0,null));
+        String respond = HttpConnect.getInst().PostRequest(jsonStr);
+        if(respond.equals("")||respond.equals("-1")){
+            System.out.println("输入的专业名称不能和该院校目前其他专业相同！");
+        }
+        else if(respond.equals("1")) {
+            System.out.println("修改成功");
+        }
+        else{
+            System.out.println("不存在该专业");
+        }
+    }
 }

@@ -22,8 +22,8 @@ public class AdminTest {
 
     @Test
     void addAdmin(){
-        Administrator ad = new Administrator("root", DigestUtils.md5Hex("123456"));
-        System.out.println(m.addAdmin(ad));
+        String s  = "123456";
+        System.out.println(DigestUtils.md5Hex(s));
     }
 
 }

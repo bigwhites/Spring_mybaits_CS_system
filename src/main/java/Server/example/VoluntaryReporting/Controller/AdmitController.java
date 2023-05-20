@@ -103,7 +103,7 @@ public class AdmitController { //录取结果
         if (administrator == null || !administrator.getPasswordMd5().equals(parms.get("pwdMd5"))) {
             return "ERROR PWD";
         } else{
-            schoolChooseImpl.deleteAll();
+            //schoolChooseImpl.deleteAll();
             admitResultImpl.deleteAllResults();
             admitResultImpl.cleanRecord(); //清除专业表中的记录
             return "ok";

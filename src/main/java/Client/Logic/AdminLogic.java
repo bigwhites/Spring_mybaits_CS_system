@@ -2,15 +2,23 @@ package Client.Logic;
 
 import Client.ScannerSingleInst;
 import Server.example.VoluntaryReporting.entity.AdmitResult;
+import Server.example.VoluntaryReporting.entity.Student;
 import com.alibaba.fastjson.JSON;
+import jxl.Cell;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import org.apache.commons.codec.digest.DigestUtils;
 import utils.HttpConnect;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class AdminLogic {
     private AdminLogic() {}
 
@@ -62,7 +70,7 @@ public class AdminLogic {
             System.out.println("密码错误");
         }
         else if(resPond.equals("")) {
-            System.out.println("还未开始录取");
+            System.out.println("暂无录取信息");
         }
         List<AdmitResult> admitResults = JSON.parseArray(resPond, AdmitResult.class);
         for (AdmitResult admitResult : admitResults) {
@@ -79,5 +87,74 @@ public class AdminLogic {
         else {
             System.out.println("录取工作还未开始");
         }
+    }
+
+    public static void clearResults() throws IOException {
+        HttpConnect.getInst().addUrlPath("/admit/clearAllRes");
+        String respond = HttpConnect.getInst().PostRequset(prepareAdminData());
+        if(respond.equals("")){
+            System.out.println("失败");
+        }
+        else if(respond.equals("ERROR PWD")){
+            System.out.println("管理员账号或密码错误！");
+        }
+        else {
+            System.out.println("成功清除录取结果");
+        }
+    }
+
+    public static int saveStu2Xls(String filePath) {  
+        File optFile = new File(filePath);
+        WritableWorkbook wb = null;
+        int size = 0;
+        if (optFile.exists()) {
+            optFile.delete();
+        }
+        try {
+            Label operLab = null;
+            optFile.createNewFile();
+            wb = Workbook.createWorkbook(optFile);
+            WritableSheet sheet = wb.createSheet("student", 0);
+            final String[] heads = {"学号", "姓名", "性别", "身份证号码", "选科类别", "总分", "录取学校", "录取专业"};
+            for (int i = 0; i < heads.length; i++) {
+                operLab = new Label(i, 0, heads[i]);
+                sheet.addCell(operLab);
+            }
+            HttpConnect.getInst().addUrlPath("/student/findAll");
+            String respond = HttpConnect.getInst().GetRequest();
+            List<Student> students = JSON.parseArray(respond, Student.class);
+            if (students == null) {
+                return 0;
+            } else {
+                size = students.size();
+            }
+            int row = 1;
+            for (Student student : students) {
+                HttpConnect.getInst().addUrlPath("/admit/getResultBySId");
+                HttpConnect.getInst().addGetParam("sId", String.valueOf(student.getSId()));
+                String resAdmit = HttpConnect.getInst().GetRequest();
+                AdmitResult admitResult = JSON.parseObject(resAdmit, AdmitResult.class);
+                String uName = "-", proName = "无被录取的专业";
+                if (admitResult.getAdmitPro() != null) {
+                    uName = admitResult.getAdmitPro().getUniverSity().getUName();
+                    proName = admitResult.getAdmitPro().getProName();
+                }
+                String[] rowCell = {  //每一行的数据
+                        String.valueOf(student.getSId()), student.getSName(), student.getSSex(),
+                        student.getIdentyId(), student.getTypeFlag() == 1 ? "物理类" : "历史类",
+                        String.valueOf(student.getTotalScore()), uName, proName
+                };
+                for (int col = 0; col < heads.length; ++col) {
+                    operLab = new Label(col, row, rowCell[col]);
+                    sheet.addCell(operLab);
+                }
+                ++row;
+            }
+            wb.write();
+            wb.close();
+        } catch (IOException | WriteException e) {
+            throw new RuntimeException(e);
+        }
+        return size;
     }
 }

@@ -35,4 +35,9 @@
         insert into university(uName) VALUES(#{uName})
     </insert>
 
+    <update id="update" parameterType="Server.example.VoluntaryReporting.entity.UniverSity">
+        UPDATE university SET uName = #{uName}
+        WHERE uId = #{uId}
+    </update>
+
 </mapper>

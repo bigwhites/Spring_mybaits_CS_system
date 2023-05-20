@@ -3,9 +3,12 @@ package Server.example.VoluntaryReporting.Controller;
 import Server.example.VoluntaryReporting.entity.Professional;
 import Server.example.VoluntaryReporting.entity.UniverSity;
 import Server.example.VoluntaryReporting.service.Impl.ProfessionalImpl;
+import Server.example.VoluntaryReporting.service.Impl.SchoolChooseImpl;
 import Server.example.VoluntaryReporting.service.Impl.UniverSityImpl;
-import Server.example.VoluntaryReporting.service.ProfessionalService;
 import com.alibaba.fastjson.JSON;
+import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,10 @@ public class ProfessionalController {
     ProfessionalImpl proImpl;
     @Autowired
     UniverSityImpl uniImpl;
+    @Autowired
+    SchoolChooseImpl schoolChooseImpl;
 
+    Logger logger = LoggerFactory.getLogger(ProfessionalController.class);
     /*******
      * #Description:  新增某大学的专业（接受多个专业对象）
      * #Param: [java.lang.String] -> [ProArrJStr] 专业对象list的json串
@@ -71,6 +77,52 @@ public class ProfessionalController {
         } else {
             return JSON.toJSONString(uni.getProfessionals());
         }
+    }
+
+    /*******
+     * #Description: 通过预测分数得到推荐专业
+     * #Param: [java.lang.Integer] -> [foreScore]
+     * #return: java.lang.String List<Pro> 的JSON串
+     * #Date: 2023/5/20
+     *******/
+    @GetMapping("/getRecommendPros")
+    @ResponseBody
+    public String getProsByForeScore(@RequestParam("score") Integer foreScore){
+        return JSON.toJSONString(proImpl.findByForeScore(foreScore));
+    }
+
+    @GetMapping("/getByName")
+    @ResponseBody
+    public String searchByName(@RequestParam("keyWord") String keyWord){
+        List<Professional> professionals = proImpl.findNameLike(keyWord);
+        if(professionals==null || professionals.size()==0 ){
+            return null;
+        }
+        else {
+            String jsonString = JSON.toJSONString(professionals);
+            logger.info("size={}",professionals.size());
+            logger.info(jsonString);
+            return jsonString;
+        }
+    }
+
+
+    @GetMapping("/deleteByProId")
+    @ResponseBody
+    public String deleteProById(@RequestParam("proId") Integer proId)
+    {
+        String s = String.valueOf(proImpl.deleteById(proId));
+        logger.info(s);
+        return s;
+    }
+
+    @PostMapping("/updateById")
+    @ResponseBody
+    public String updateById(@RequestBody  String jsonStr){
+        Professional professional = JSON.parseObject(jsonStr, Professional.class);
+        logger.info(professional.toString());
+        int res = proImpl.updateBaseData(professional);
+        return String.valueOf(res);
     }
 
 }

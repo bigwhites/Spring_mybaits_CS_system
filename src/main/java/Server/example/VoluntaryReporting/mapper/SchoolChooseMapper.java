@@ -17,4 +17,6 @@ public interface SchoolChooseMapper {
     int insertChoose(SchoolChoose schoolChoose);
 
     int deleteAll();
+
+    int getCntByProId(Integer proId);
 }

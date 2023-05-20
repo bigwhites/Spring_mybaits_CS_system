@@ -81,6 +81,12 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/findAll")
+    @ResponseBody
+    public String findAll(){
+        return JSON.toJSONString(studentImpl.findAll());
+    }
+
 
     /*******
      * #Description: 查询学生报的填报的专业的数量

@@ -17,4 +17,5 @@ public interface UniverSityMapper {
     int addUniverSity(UniverSity univerSity);
 
 
+    int update(UniverSity univerSity);
 }

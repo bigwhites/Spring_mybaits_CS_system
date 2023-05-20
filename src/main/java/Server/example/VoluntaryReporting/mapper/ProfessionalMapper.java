@@ -19,4 +19,12 @@ public interface ProfessionalMapper {
     int addProfessional(Professional professional);
 
     int update(Professional professional);
+
+    List<Professional> findByForeScore(Integer foreScore);
+
+    List<Professional> findNameLike(String keyWord);
+
+    int deleteById(Integer proId);
+
+    int updateBaseData(Professional professional);
 }

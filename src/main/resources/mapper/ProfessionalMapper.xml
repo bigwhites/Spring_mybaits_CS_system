@@ -33,6 +33,20 @@
         p.minScore FROM professional p inner join university u ON p.schId=u.uId
     </select>
 
+
+    <select id="findByForeScore" parameterType="int" resultMap="Pm">
+        SELECT p.proId, u.*, p.proName, p.forecastScore, p.maxCnt, p.curCnt,
+        p.minScore FROM professional p inner join university u ON p.schId=u.uId
+        WHERE p.forecastScore &lt; #{foreScore}
+        ORDER BY p.forecastScore DESC
+    </select>
+
+    <select id="findNameLike" parameterType="java.lang.String" resultMap="Pm">
+        SELECT p.proId, u.*, p.proName, p.forecastScore, p.maxCnt, p.curCnt,
+        p.minScore FROM professional p inner join university u ON p.schId=u.uId
+        WHERE p.proName like #{keyWord}
+    </select>
+
     <insert id="addProfessional" parameterType="Server.example.VoluntaryReporting.entity.Professional">
         INSERT INTO professional(schId,proName,forecastScore,maxCnt)
         VALUES(#{uId},#{proName},#{forecastScore},#{maxCnt})
@@ -44,5 +58,17 @@
                p.curCnt  = #{curCnt}  , p.minScore = #{minScore} , p.schId = #{uId}
         WHERE  p.proId = #{proId}
     </update>
+
+    <update id="updateBaseData" parameterType="Server.example.VoluntaryReporting.entity.Professional">
+        UPDATE professional p
+        SET    p.proName = #{proName} , p.forecastScore = #{forecastScore}
+        , p.maxCnt = #{maxCnt}
+        WHERE  p.proId = #{proId}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM professional p
+        WHERE  p.proId = #{proId}
+    </delete>
 
 </mapper>

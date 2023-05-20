@@ -1,10 +1,7 @@
 package Client.Logic;
 
 import Client.ScannerSingleInst;
-import Server.example.VoluntaryReporting.entity.AdmitResult;
-import Server.example.VoluntaryReporting.entity.HighSchool;
-import Server.example.VoluntaryReporting.entity.SchoolChoose;
-import Server.example.VoluntaryReporting.entity.Student;
+import Server.example.VoluntaryReporting.entity.*;
 import com.alibaba.fastjson2.JSON;
 import jxl.Cell;
 import jxl.Sheet;
@@ -282,5 +279,19 @@ public class StudentLogic {
         else {
             System.out.println(JSON.parseObject(respond, AdmitResult.class));
         }
+    }
+
+    public static void showRecommend(String userId) throws IOException {
+        System.out.print("请输入您的预估分数>>>>>>");
+        String  scoreStr = ScannerSingleInst.getInst().next();
+        HttpConnect.getInst().addUrlPath("/professional/getRecommendPros");
+        HttpConnect.getInst().addGetParam("score",scoreStr);
+        String respond = HttpConnect.getInst().GetRequest();
+        List<Professional> professionals = JSON.parseArray(respond, Professional.class);
+        System.out.printf("共有%d个推荐专业:\n",professionals.size());
+        professionals.forEach(professional -> {
+            System.out.println(professional.toString());
+        });
+
     }
 }

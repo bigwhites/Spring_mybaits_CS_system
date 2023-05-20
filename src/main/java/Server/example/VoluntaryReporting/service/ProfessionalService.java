@@ -14,4 +14,12 @@ public interface ProfessionalService {
     List<Professional> findByName(String proName);
 
     int update(Professional professional);
+
+    int updateBaseData(Professional professional);
+
+    List<Professional> findByForeScore(Integer foreScore);
+
+    List<Professional> findNameLike(String keyWord);
+
+    int deleteById(Integer proId);
 }

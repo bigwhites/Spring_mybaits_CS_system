@@ -17,6 +17,13 @@
         inner join university uni ON (SELECT p.schId FROM professional p WHERE p.proId = sc.proId1 ) = uni.uId
         WHERE sId = #{sId} ORDER BY sc.`order`
     </select>
+
+    <select id="getCntByProId" parameterType="int" resultType="int">
+        select count(*) from schoolchose p where
+        proId1 = #{proId} or proId2 = #{proId} or proId3 = #{proId} or proId4 = #{proId}
+    </select>
+
+
     <delete id="deleteAll">
         DELETE FROM schoolchoose
     </delete>

@@ -138,4 +138,22 @@ public class UniverSitLogic {
         }
     }
 
+    public static void update() throws IOException {
+        System.out.print("请输入院校代码>>>>>>");
+        String uId = ScannerSingleInst.getInst().next();
+        System.out.print("输入新的院校名称>>>>>>");
+        String uName = ScannerSingleInst.getInst().next();
+        String jsonString = JSON.toJSONString(new UniverSity(Integer.parseInt(uId), uName, null));
+        HttpConnect.getInst().addUrlPath("/university/update");
+        String respond = HttpConnect.getInst().PostRequest(jsonString);
+        if(respond.equals("-1")){
+            System.out.println("新院校名不能与其他院校相同");
+        }
+        else if(respond.equals("1")){
+            System.out.println("修改成功！");
+        }
+        else {
+            System.out.println("没有该院校！");
+        }
+    }
 }

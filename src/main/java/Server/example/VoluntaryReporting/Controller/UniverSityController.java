@@ -81,5 +81,18 @@ public class UniverSityController {
         return String.valueOf(res);
     }
 
+    /*******
+     * #Description: 更新学校的名字
+     * #Param: [java.lang.String] -> [jsonStr]
+     * #return: java.lang.String
+     * #Date: 2023/5/21
+     *******/
+    @PostMapping("/update")
+    @ResponseBody
+    public String update(@RequestBody String jsonStr){
+        UniverSity univerSity = JSON.parseObject(jsonStr, UniverSity.class);
+        return String.valueOf(univerSityImp.update(univerSity));
+    }
+
 
 }

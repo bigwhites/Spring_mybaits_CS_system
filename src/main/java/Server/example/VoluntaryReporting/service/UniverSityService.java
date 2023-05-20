@@ -17,4 +17,6 @@ public interface UniverSityService {
     UniverSity findByName(String uName);
 
     int addUniverSity(UniverSity univerSity);
+
+    int update(UniverSity univerSity);
 }
