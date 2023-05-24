@@ -103,7 +103,7 @@ public class AdminLogic {
         }
     }
 
-    public static int saveStu2Xls(String filePath) {  
+    public static int saveStu2Xls(String filePath) {
         File optFile = new File(filePath);
         WritableWorkbook wb = null;
         int size = 0;

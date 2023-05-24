@@ -169,7 +169,6 @@ public class StudentLogic {
                         "setProId" + String.valueOf(j+1), Integer.class);
                 m.invoke(schoolChoose,proIds[j]);
             }
-            System.out.println(schoolChoose);
             schoolChooses.add(schoolChoose);
             System.out.print("是否继续填报？（0/1）>>>>>>");
             String sel  = ScannerSingleInst.getInst().next();
@@ -253,7 +252,7 @@ public class StudentLogic {
         String respnond = HttpConnect.getInst().GetRequest();  //已登录的学生不可能为空值
         System.out.println(JSON.parseObject(respnond, Student.class).toString());
 
-        System.out.printf("当前填报的专业的数量为%d个\n", StudentLogic.getChosenCnt(userId) );
+        System.out.printf("当前填报的志愿的数量为%d个\n", StudentLogic.getChosenCnt(userId) );
     }
 
     /*******

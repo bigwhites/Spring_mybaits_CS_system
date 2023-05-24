@@ -27,7 +27,7 @@ public class SchoolChooseTest {
 
     @Test
     void testfind(){
-        List<SchoolChoose> schoolChooses = schoolChooseImpl.findBySId(210106);
+        List<SchoolChoose> schoolChooses = schoolChooseImpl.findBySId(210118);
         schoolChooses.forEach(System.out::println);
     }
 }

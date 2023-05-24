@@ -83,12 +83,19 @@ public class SchoolChooseImpl implements SchoolChooseService {
                 boolean ok = true;
                 Integer[] proIds = {schoolChoose.getProId1(), schoolChoose.getProId2(),
                         schoolChoose.getProId3(), schoolChoose.getProId4()};
+                int i = 0;
                 for (Integer proId : proIds) {   //对专业的外键约束
                     Professional professional = null;
                     if (proId != null) {
                         professional = professionalMapper.findById(proId);
                     }
-                    ok = proId == null || professional.getUId() == schoolChoose.getUniId(); //对数据正确性的冗余校验
+                    if (i != 0) {
+                        ok = professional == null || professional.getUId() == schoolChoose.getUniId(); //对数据正确性的冗余校验
+                    }
+                    else {
+                        ok = proId!=null;
+                    }
+                    ++i;
                     if (!ok) {
                         break;
                     }
@@ -96,8 +103,7 @@ public class SchoolChooseImpl implements SchoolChooseService {
                 if (ok) {
                     try {
                         return schoolChooseMapper.insertChoose(schoolChoose);
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }  //不满足主键唯一的情况由数据库处理
                 }

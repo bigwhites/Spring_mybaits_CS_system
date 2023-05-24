@@ -27,6 +27,7 @@ public class ProfessionalLogic {
         int sel = Integer.parseInt(in);
         switch (sel){
             case 1: {
+                System.out.print("请输入关键字>>>>>>");
                 final String pName = ScannerSingleInst.getInst().next();
                 HttpConnect.getInst().addUrlPath("/professional/searchByPName");
                 HttpConnect.getInst().addGetParam("proName", pName);
@@ -41,6 +42,7 @@ public class ProfessionalLogic {
                 break;
             }
             case 2: {
+                System.out.print("请输入院校的名字>>>>>>");
                 final String uniName = ScannerSingleInst.getInst().next();
                 HttpConnect.getInst().addUrlPath("/professional/searchByUName");
                 HttpConnect.getInst().addGetParam("uniName", uniName);

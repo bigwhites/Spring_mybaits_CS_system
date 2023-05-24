@@ -118,7 +118,9 @@ public class StudentController {
         if(studentImpl.findById(sId)==null){
             return null;
         }
-        return JSON.toJSONString(schoolChooseImpl.findBySId(sId));
+        List<SchoolChoose> bySId = schoolChooseImpl.findBySId(sId);
+        logger.info("{}",bySId.size());
+        return JSON.toJSONString(bySId);
     }
 
     /*******

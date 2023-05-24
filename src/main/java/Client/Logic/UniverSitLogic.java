@@ -26,8 +26,7 @@ public class UniverSitLogic {
         HttpConnect.getInst().addUrlPath("/university/getAll");
         String jsonData = HttpConnect.getInst().GetRequest();
         List<UniverSity> univerSities = JSON.parseArray(jsonData, UniverSity.class);
-        final String filePath = "src/main/resources/output/" + fileName;
-        File xlsFile = new File(filePath);  //创建文件
+        File xlsFile = new File(fileName);  //创建文件
         if (xlsFile.exists()) {
             xlsFile.delete();
         }

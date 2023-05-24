@@ -16,7 +16,7 @@ import java.io.IOException;
 public class ClientApplicatiion {
 
     static String userId = String.valueOf(210115);   //考生号 或 管理员用户名   "testUser"
-    static int userType =2;
+    static int userType ;
     private static boolean logIn() throws IOException {
         System.out.print("请选择用户身份(1.管理员 2.学生)>>>>>>>>");
         int sel1 = ScannerSingleInst.getInst().nextInt();
@@ -36,7 +36,7 @@ public class ClientApplicatiion {
         }
         String rightPwdMd5 = connect.GetRequest();
         if(rightPwdMd5.equals("")) {
-            if (userType == 1) {
+            if (userType == 2) {
                 System.out.println("无该学生");
                 System.exit(-1);
             } else {
@@ -95,7 +95,6 @@ public class ClientApplicatiion {
                 System.exit(0);
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
         while (true){
                 try {
@@ -111,11 +110,8 @@ public class ClientApplicatiion {
                     }
                 }
                 catch (IOException e){   //让程序崩溃
-                    e.printStackTrace();
-                    break;
                 }
                 catch (RuntimeException e){  //恢复运行
-                    e.printStackTrace();
                 }
         }
     }
